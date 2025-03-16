@@ -2,6 +2,8 @@
 
 void handle_events(GameContext *cxt){
 
+    if(!cxt) return;
+
     SDL_Event event;
     while(SDL_PollEvent(&event)){
 
@@ -21,5 +23,4 @@ void handle_events(GameContext *cxt){
 
     }
 
-    return;
 }

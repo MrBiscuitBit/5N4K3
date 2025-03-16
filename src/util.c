@@ -7,6 +7,14 @@ void safe_free(void **ptr){
     }
 }
 
+void cleanup_snake(GameContext *cxt){
+
+    if(!cxt) return;
+
+    safe_free((void**)&cxt->snake_head);
+    
+}
+
 void cleanup_sdl(GameContext *cxt){
 
     if(!cxt) return;
@@ -22,17 +30,16 @@ void cleanup_sdl(GameContext *cxt){
     }
 
     SDL_Quit();
-
-    return;
 }
 
 void cleanup_game_context(GameContext *cxt){
 
     if(!cxt) return;
 
+    cleanup_snake(cxt);
+
     cleanup_sdl(cxt);
 
     safe_free((void **)&cxt);
-    
-    return;
+
 }
