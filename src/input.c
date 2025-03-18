@@ -32,6 +32,12 @@ void handle_events(GameContext *cxt){
                     if(cxt->player_data->dir != RIGHT)
                         cxt->player_data->dir = LEFT;
                     break;
+                case SDL_SCANCODE_SPACE:
+                    if(cxt->game_over){
+                        reset_snake(cxt);
+                        cxt->game_over = 0;
+                    }
+                    break;
                 default:
                     break;
             }

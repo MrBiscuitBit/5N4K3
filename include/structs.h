@@ -31,6 +31,7 @@ typedef struct GameContext{
     App app;
     int board[BOARD_HEIGHT][BOARD_WIDTH];
     PlayerData *player_data;
+    int game_over;
 }GameContext;
 
 #endif

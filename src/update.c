@@ -37,18 +37,22 @@ void update_snake(GameContext *cxt){
         case UP:
             if(cxt->player_data->snake_head->pos.y > 0)
                 cxt->player_data->snake_head->pos.y--;
+            else cxt->game_over = 1;
             break;
         case RIGHT:
             if(cxt->player_data->snake_head->pos.x < (BOARD_WIDTH - 1))
                 cxt->player_data->snake_head->pos.x++;
+            else cxt->game_over = 1;
             break;
         case DOWN:
             if(cxt->player_data->snake_head->pos.y < (BOARD_HEIGHT - 1))
                 cxt->player_data->snake_head->pos.y++;
+            else cxt->game_over = 1;
             break;
         case LEFT:
             if(cxt->player_data->snake_head->pos.x > 0)
                 cxt->player_data->snake_head->pos.x--;
+            else cxt->game_over = 1;
         default:
             break;
     }

@@ -20,6 +20,17 @@ void cleanup_snake(GameContext *cxt){
 
     safe_free((void**)&cxt->player_data->snake_head);
     
+    cxt->player_data->snake_tail = NULL;
+}
+
+void cleanup_player_data(GameContext *cxt){
+
+    if(!cxt) return;
+
+    cleanup_snake(cxt);
+
+    safe_free((void **)&cxt->player_data);
+
 }
 
 void cleanup_sdl(GameContext *cxt){
@@ -43,10 +54,31 @@ void cleanup_game_context(GameContext *cxt){
 
     if(!cxt) return;
 
-    cleanup_snake(cxt);
+    cleanup_player_data(cxt);
 
     cleanup_sdl(cxt);
 
     safe_free((void **)&cxt);
+
+}
+
+void reset_snake(GameContext *cxt){
+
+    if(!cxt) return;
+
+    cleanup_snake(cxt);
+
+    cxt->player_data->snake_head = malloc(sizeof(Snake));
+    if(!cxt->player_data->snake_head){
+        SDL_Log("ERROR::Failed To Allocate Snake Head In Function Reset Snake\n");
+        return;
+    }
+    memset(cxt->player_data->snake_head, 0, sizeof(Snake));
+    
+    cxt->player_data->dir = UP;
+    cxt->player_data->snake_head->pos = (vec2){(BOARD_WIDTH - 2), (BOARD_HEIGHT - 2)};
+    cxt->player_data->snake_head->next = NULL;
+
+    cxt->player_data->snake_tail = cxt->player_data->snake_head;
 
 }

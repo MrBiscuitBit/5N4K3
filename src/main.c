@@ -10,6 +10,7 @@ int main(int argc, char *argv[]){
     Uint64 previous_time, current_time;
     previous_time = SDL_GetTicks();
 
+    game->game_over = 0;
     game->app.running = 1;
     while(game->app.running){
 
@@ -21,13 +22,15 @@ int main(int argc, char *argv[]){
 
         handle_events(game);
 
-        clear_board(game);
-        if((SDL_GetTicks() - game->player_data->last_move_time) >= game->player_data->move_delay){
-            update_snake(game);
-            game->player_data->last_move_time = SDL_GetTicks();
+        if(!game->game_over){
+            clear_board(game);
+            if((SDL_GetTicks() - game->player_data->last_move_time) >= game->player_data->move_delay){
+                update_snake(game);
+                game->player_data->last_move_time = SDL_GetTicks();
+            }
+            update_board(game);
         }
-        update_board(game);
-        
+
         draw_board(game);
 
         present_scene(game);
