@@ -7,11 +7,18 @@ void safe_free(void **ptr){
     }
 }
 
+void cap_frame_rate(Uint64 current_time){
+    Uint64 elapsed_time = SDL_GetTicks() - current_time;
+    if(elapsed_time < FRAME_TIME){
+        SDL_Delay(FRAME_TIME - elapsed_time);
+    }
+}
+
 void cleanup_snake(GameContext *cxt){
 
     if(!cxt) return;
 
-    safe_free((void**)&cxt->snake_head);
+    safe_free((void**)&cxt->player_data->snake_head);
     
 }
 

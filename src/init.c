@@ -20,6 +20,38 @@ static int init_sdl(GameContext *cxt){
     return 0;
 }
 
+static int init_player_data(GameContext *cxt){
+
+    if(!cxt) return 1;
+
+    cxt->player_data = malloc(sizeof(PlayerData));
+    if(!cxt->player_data){
+        SDL_Log("ERROR::Failed To Allocate Player Data\n");
+        cleanup_game_context(cxt);
+        return 1;
+    }
+    memset(cxt->player_data, 0, sizeof(PlayerData));
+    
+    cxt->player_data->snake_head = malloc(sizeof(Snake));
+    if(!cxt->player_data->snake_head){
+        SDL_Log("ERROR::Failed To Allocate Snake Head\n");
+        cleanup_game_context(cxt);
+        return 2;
+    }
+    memset(cxt->player_data->snake_head, 0, sizeof(Snake));
+    
+    cxt->player_data->dir = UP;
+    cxt->player_data->snake_head->pos = (vec2){(BOARD_WIDTH - 2), (BOARD_HEIGHT - 2)};
+    cxt->player_data->snake_head->next = NULL;
+
+    cxt->player_data->snake_tail = cxt->player_data->snake_head;
+
+    //Timer For Movement
+    cxt->player_data->move_delay = 200;
+
+    return 0;
+}
+
 GameContext *init_game_context(){
 
     GameContext *new_game_cxt = malloc(sizeof(GameContext));
@@ -35,15 +67,11 @@ GameContext *init_game_context(){
         return NULL;
     }
 
-    new_game_cxt->snake_head = malloc(sizeof(Snake));
-    if(!new_game_cxt->snake_head){
-        SDL_Log("ERROR::Failed To Allocate Snake Head\n");
+    if(init_player_data(new_game_cxt)){
+        SDL_Log("ERROR::Init Player Data Failed\n");
         cleanup_game_context(new_game_cxt);
         return NULL;
     }
-    new_game_cxt->snake_head->pos = (vec2){(BOARD_WIDTH - 2), (BOARD_HEIGHT - 2)};
-    new_game_cxt->snake_head->next = NULL;
-
 
     return new_game_cxt;
 }

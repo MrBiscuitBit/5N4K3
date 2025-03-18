@@ -3,6 +3,8 @@
 
 #include "structs.h"
 
+void clear_board(GameContext *cxt);
 void update_board(GameContext *cxt);
+void update_snake(GameContext *cxt);
 
 #endif
