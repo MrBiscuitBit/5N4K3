@@ -45,6 +45,7 @@ void add_snake_node(GameContext *cxt){
         return;
     }
     memset(new_snake, 0, sizeof(Snake));
+
     new_snake->prev = cxt->player_data->snake_tail;
     cxt->player_data->snake_tail->next = new_snake;
     cxt->player_data->snake_tail = new_snake;
@@ -129,7 +130,10 @@ void update_snake(GameContext *cxt){
     //Move The Tail Up To The Head
     Snake *snake = cxt->player_data->snake_tail;
     while(snake->prev){
-        snake->pos = snake->prev->pos;
+        if(snake->prev == cxt->player_data->snake_head)
+            snake->pos = cxt->player_data->prev_head_pos;
+        else
+            snake->pos = snake->prev->pos;
         snake = snake->prev;
     }
 
