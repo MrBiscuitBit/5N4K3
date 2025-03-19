@@ -17,20 +17,16 @@ void handle_events(GameContext *cxt){
                     cxt->app.running = 0;
                     break;
                 case SDL_SCANCODE_UP:
-                    if(cxt->player_data->dir != DOWN)
-                        cxt->player_data->dir = UP;
+                    cxt->player_data->directional_input = UP;
                     break;
                 case SDL_SCANCODE_RIGHT:
-                    if(cxt->player_data->dir != LEFT)
-                        cxt->player_data->dir = RIGHT;
+                    cxt->player_data->directional_input = RIGHT;
                     break;
                 case SDL_SCANCODE_DOWN:
-                    if(cxt->player_data->dir != UP)
-                        cxt->player_data->dir = DOWN;
+                    cxt->player_data->directional_input = DOWN;
                     break;
                 case SDL_SCANCODE_LEFT:
-                    if(cxt->player_data->dir != RIGHT)
-                        cxt->player_data->dir = LEFT;
+                    cxt->player_data->directional_input = LEFT;
                     break;
                 case SDL_SCANCODE_SPACE:
                     if(cxt->game_over){

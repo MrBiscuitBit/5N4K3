@@ -27,9 +27,9 @@ int main(int argc, char *argv[]){
             if((SDL_GetTicks() - game->player_data->last_move_time) >= game->player_data->move_delay){
                 update_snake(game);
                 game->player_data->last_move_time = SDL_GetTicks();
-                update_apple(game);
             }
             update_board(game);
+            update_apple(game);
         }
 
         draw_board(game);

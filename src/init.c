@@ -43,11 +43,12 @@ static int init_player_data(GameContext *cxt){
     cxt->player_data->dir = UP;
     cxt->player_data->snake_head->pos = (vec2){(BOARD_WIDTH - 2), (BOARD_HEIGHT - 2)};
     cxt->player_data->snake_head->next = NULL;
+    cxt->player_data->snake_head->prev = NULL;
 
     cxt->player_data->snake_tail = cxt->player_data->snake_head;
 
     //Timer For Movement
-    cxt->player_data->move_delay = 225;
+    cxt->player_data->move_delay = 200;
 
     return 0;
 }

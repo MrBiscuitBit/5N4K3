@@ -10,5 +10,6 @@ void cleanup_player_data(GameContext *cxt);
 void cleanup_sdl(GameContext *cxt);
 void cleanup_game_context(GameContext *cxt);
 void reset_snake(GameContext *cxt);
+void clear_board(GameContext *cxt);
 
 #endif

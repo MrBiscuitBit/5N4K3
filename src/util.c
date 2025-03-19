@@ -16,11 +16,18 @@ void cap_frame_rate(Uint64 current_time){
 
 void cleanup_snake(GameContext *cxt){
 
-    if(!cxt) return;
+    if(!cxt || !cxt->player_data) return;
 
-    safe_free((void**)&cxt->player_data->snake_head);
+    Snake *temp, *snake = cxt->player_data->snake_tail;
+    while(snake != NULL){
+        temp = snake;
+        snake = snake->prev;
+        safe_free((void **)&temp);
+    }
     
+    cxt->player_data->snake_head = NULL;
     cxt->player_data->snake_tail = NULL;
+
 }
 
 void cleanup_player_data(GameContext *cxt){
@@ -74,13 +81,14 @@ void reset_snake(GameContext *cxt){
         return;
     }
     memset(cxt->player_data->snake_head, 0, sizeof(Snake));
-    
+
     cxt->player_data->dir = UP;
+    cxt->player_data->directional_input = -1;
     cxt->player_data->snake_head->pos = (vec2){(BOARD_WIDTH - 2), (BOARD_HEIGHT - 2)};
     cxt->player_data->snake_head->next = NULL;
+    cxt->player_data->snake_head->prev = NULL;
 
     cxt->player_data->snake_tail = cxt->player_data->snake_head;
-
 }
 
 void clear_board(GameContext *cxt){

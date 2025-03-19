@@ -9,14 +9,15 @@ typedef struct vec2{
 
 typedef struct Snake{
     vec2 pos;
-    struct Snake *next;
+    struct Snake *next, *prev;
 }Snake;
 
 typedef struct PlayerData{
     int dir;
-    vec2 prev_pos;
+    vec2 prev_head_pos;
     int move_delay;
     Uint64 last_move_time;
+    int directional_input;
     Snake *snake_head, *snake_tail;
 }PlayerData;
 
