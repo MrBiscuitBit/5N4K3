@@ -34,7 +34,9 @@ void handle_events(GameContext *cxt){
                     break;
                 case SDL_SCANCODE_SPACE:
                     if(cxt->game_over){
+                        clear_board(cxt);
                         reset_snake(cxt);
+                        cxt->apple = (vec2){3, 3};
                         cxt->game_over = 0;
                     }
                     break;

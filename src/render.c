@@ -26,11 +26,14 @@ void draw_board(GameContext *cxt){
             cell.y = (i * CELL_SIZE) + BOARD_OFFSET_Y;
 
             switch(cxt->board[i][j]){
-                case 0:
+                case EMPTY:
                     SDL_SetRenderDrawColor(cxt->app.renderer, 0, 0, 0, 255);
                     break;
-                case 1:
+                case SNAKE:
                     SDL_SetRenderDrawColor(cxt->app.renderer, 0, 255, 0, 255);
+                    break;
+                case APPLE:
+                    SDL_SetRenderDrawColor(cxt->app.renderer, 255, 0, 0, 255);
                     break;
                 default:
                     SDL_SetRenderDrawColor(cxt->app.renderer, 0, 0, 0, 255);

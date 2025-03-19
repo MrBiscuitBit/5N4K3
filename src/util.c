@@ -82,3 +82,15 @@ void reset_snake(GameContext *cxt){
     cxt->player_data->snake_tail = cxt->player_data->snake_head;
 
 }
+
+void clear_board(GameContext *cxt){
+
+    if(!cxt) return;
+
+    for(int i = 0; i < BOARD_HEIGHT; i++){
+        for(int j = 0; j < BOARD_WIDTH; j++){
+            cxt->board[i][j] = 0;
+        }
+    }
+
+}

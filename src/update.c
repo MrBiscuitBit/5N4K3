@@ -1,17 +1,5 @@
 #include "update.h"
 
-void clear_board(GameContext *cxt){
-
-    if(!cxt) return;
-
-    for(int i = 0; i < BOARD_HEIGHT; i++){
-        for(int j = 0; j < BOARD_WIDTH; j++){
-            cxt->board[i][j] = 0;
-        }
-    }
-
-}
-
 void update_board(GameContext *cxt){
     
     if(!cxt) return;
@@ -23,7 +11,39 @@ void update_board(GameContext *cxt){
         return;
     }
 
-    cxt->board[(int)cxt->player_data->snake_head->pos.y][(int)cxt->player_data->snake_head->pos.x] = 1;
+    cxt->board[(int)cxt->player_data->snake_head->pos.y][(int)cxt->player_data->snake_head->pos.x] = SNAKE;
+    cxt->board[(int)cxt->apple.y][(int)cxt->apple.x] = APPLE;
+
+}
+
+void spawn_apple(GameContext *cxt){
+
+    if(!cxt) return;
+
+    cxt->apple.x = rand() % BOARD_WIDTH;
+    cxt->apple.y = rand() % BOARD_HEIGHT;
+
+    bool apple_position_accepted = 0;
+    while(!apple_position_accepted){
+
+        if(cxt->board[(int)cxt->apple.y][(int)cxt->apple.y] == EMPTY){
+            apple_position_accepted = 1;
+        }
+        else{
+            cxt->apple.x = rand() % BOARD_WIDTH;
+            cxt->apple.y = rand() % BOARD_HEIGHT;
+        }
+    }
+
+}
+
+void update_apple(GameContext *cxt){
+
+    if(!cxt) return;
+
+    if(cxt->player_data->snake_head->pos.x == cxt->apple.x && cxt->player_data->snake_head->pos.y == cxt->apple.y){
+        spawn_apple(cxt);
+    }
 
 }
 
@@ -56,5 +76,5 @@ void update_snake(GameContext *cxt){
         default:
             break;
     }
-    
+        
 }

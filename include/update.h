@@ -3,8 +3,10 @@
 
 #include "structs.h"
 
-void clear_board(GameContext *cxt);
 void update_board(GameContext *cxt);
+void spawn_apple(GameContext *cxt);
+void update_apple(GameContext *cxt);
 void update_snake(GameContext *cxt);
+
 
 #endif

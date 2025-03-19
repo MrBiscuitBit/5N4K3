@@ -32,6 +32,7 @@ typedef struct GameContext{
     int board[BOARD_HEIGHT][BOARD_WIDTH];
     PlayerData *player_data;
     int game_over;
+    vec2 apple;
 }GameContext;
 
 #endif
