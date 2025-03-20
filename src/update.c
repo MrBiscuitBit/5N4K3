@@ -11,7 +11,8 @@ void update_board(GameContext *cxt){
         }
         snake = snake->next;
     }
-    cxt->board[(int)cxt->apple.y][(int)cxt->apple.x] = APPLE;
+    if(cxt->apple.x != -1 && cxt->apple.y != -1)
+        cxt->board[(int)cxt->apple.y][(int)cxt->apple.x] = APPLE;
 
 }
 
@@ -57,13 +58,22 @@ void add_snake_node(GameContext *cxt){
 
 void update_apple(GameContext *cxt){
 
-    if(!cxt) return;
+    if(!cxt || (cxt->current_score == (BOARD_WIDTH * BOARD_HEIGHT) - 1)) return;
 
     if(cxt->player_data->snake_head->pos.x == cxt->apple.x && cxt->player_data->snake_head->pos.y == cxt->apple.y){
         spawn_apple(cxt);
         add_snake_node(cxt);
+        SDL_Log("Current Score: %d\n", ++cxt->current_score);
     }
 
+    if(cxt->current_score == (BOARD_WIDTH * BOARD_HEIGHT) - 1){
+        cxt->apple = (vec2){-1, -1};
+        update_snake(cxt);
+        clear_board(cxt);
+        update_board(cxt);
+        cxt->game_over = 1;
+        SDL_Log("Player Wins!");
+    }
 }
 
 void update_snake_direction(GameContext *cxt){
@@ -102,29 +112,39 @@ void update_snake(GameContext *cxt){
     update_snake_direction(cxt);
 
     //Move Snake Head Forward
+    
     cxt->player_data->prev_head_pos = cxt->player_data->snake_head->pos;
     switch(cxt->player_data->dir){
         case UP:
-            if(cxt->player_data->snake_head->pos.y > 0)
+            if(cxt->player_data->snake_head->pos.y > 0 &&
+               cxt->board[(int)cxt->player_data->snake_head->pos.y - 1][(int)cxt->player_data->snake_head->pos.x] != SNAKE)
                 cxt->player_data->snake_head->pos.y--;
             else cxt->game_over = 1;
             break;
         case RIGHT:
-            if(cxt->player_data->snake_head->pos.x < (BOARD_WIDTH - 1))
+            if(cxt->player_data->snake_head->pos.x < (BOARD_WIDTH - 1) &&
+               cxt->board[(int)cxt->player_data->snake_head->pos.y][(int)cxt->player_data->snake_head->pos.x + 1] != SNAKE)
                 cxt->player_data->snake_head->pos.x++;
             else cxt->game_over = 1;
             break;
         case DOWN:
-            if(cxt->player_data->snake_head->pos.y < (BOARD_HEIGHT - 1))
+            if(cxt->player_data->snake_head->pos.y < (BOARD_HEIGHT - 1) &&
+               cxt->board[(int)cxt->player_data->snake_head->pos.y + 1][(int)cxt->player_data->snake_head->pos.x] != SNAKE)
                 cxt->player_data->snake_head->pos.y++;
             else cxt->game_over = 1;
             break;
         case LEFT:
-            if(cxt->player_data->snake_head->pos.x > 0)
+            if(cxt->player_data->snake_head->pos.x > 0 &&
+               cxt->board[(int)cxt->player_data->snake_head->pos.y][(int)cxt->player_data->snake_head->pos.x - 1] != SNAKE)
                 cxt->player_data->snake_head->pos.x--;
             else cxt->game_over = 1;
         default:
             break;
+    }
+
+    if(cxt->game_over){
+        SDL_Log("Game Over!\n");
+        return;
     }
 
     //Move The Tail Up To The Head

@@ -34,6 +34,7 @@ typedef struct GameContext{
     PlayerData *player_data;
     int game_over;
     vec2 apple;
+    int current_score;
 }GameContext;
 
 #endif

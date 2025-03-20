@@ -1,7 +1,7 @@
 #ifndef UPDATE_H
 #define UPDATE_H
 
-#include "structs.h"
+#include "util.h"
 
 void update_board(GameContext *cxt);
 void spawn_apple(GameContext *cxt);

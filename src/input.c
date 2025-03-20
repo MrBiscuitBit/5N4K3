@@ -32,7 +32,7 @@ void handle_events(GameContext *cxt){
                     if(cxt->game_over){
                         clear_board(cxt);
                         reset_snake(cxt);
-                        cxt->apple = (vec2){3, 3};
+                        cxt->apple = (vec2){1, 1};
                         cxt->game_over = 0;
                     }
                     break;

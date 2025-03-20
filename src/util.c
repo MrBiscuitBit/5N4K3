@@ -89,6 +89,8 @@ void reset_snake(GameContext *cxt){
     cxt->player_data->snake_head->prev = NULL;
 
     cxt->player_data->snake_tail = cxt->player_data->snake_head;
+    cxt->current_score = 0;
+    SDL_Log("Current Score: %d\n", cxt->current_score);
 }
 
 void clear_board(GameContext *cxt){
