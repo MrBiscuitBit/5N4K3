@@ -1,7 +1,8 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include "util.h"
+#include "main_menu.h"
+#include "game_playing.h"
 
 GameContext *init_game_context();
 

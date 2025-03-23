@@ -1,7 +1,5 @@
 #include "init.h"
 #include "input.h"
-#include "render.h"
-#include "update.h"
 
 int main(int argc, char *argv[]){
 
@@ -22,18 +20,10 @@ int main(int argc, char *argv[]){
 
         handle_events(game);
 
-        if(!game->game_over){
-            if((SDL_GetTicks() - game->player_data->last_move_time) >= game->player_data->move_delay){
-                update_snake(game);
-                game->player_data->last_move_time = SDL_GetTicks();
-            }
-            clear_board(game);
-            update_board(game);
-            update_apple(game);
-        }
+        update_states(game);
 
-        draw_board(game);
-
+        render_states(game);
+        
         present_scene(game);
         
         cap_frame_rate(current_time);

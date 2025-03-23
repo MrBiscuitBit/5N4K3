@@ -28,8 +28,29 @@ typedef struct App{
     Uint64 delta_time;
 }App;
 
+typedef struct GameState{
+    void(*state_enter)(GameContext *cxt);
+    void(*state_handle_events)(GameContext *cxt, SDL_Event *event);
+    void(*state_update)(GameContext *cxt);
+    void(*state_render)(GameContext *cxt);
+    void(*state_exit)(GameContext *cxt);
+    const char *name;
+}GameState;
+
+typedef struct GameStateNode{
+    GameState *state;
+    struct GameStateNode *prev, *next;
+}GameStateNode;
+
+typedef struct GameStateManager{
+    GameState *state_pool[STATE_COUNT];
+    GameStateNode state_head, *state_tail;
+    int state_counter;
+}GameStateManager;
+
 typedef struct GameContext{
     App app;
+    GameStateManager *game_state_manager;
     int board[BOARD_HEIGHT][BOARD_WIDTH];
     PlayerData *player_data;
     int game_over;

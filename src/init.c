@@ -48,7 +48,37 @@ static int init_player_data(GameContext *cxt){
     cxt->player_data->snake_tail = cxt->player_data->snake_head;
 
     //Timer For Movement
-    cxt->player_data->move_delay = 64;
+    cxt->player_data->move_delay = 75;
+
+    return 0;
+}
+
+int init_game_state_manager(GameContext *cxt){
+
+    if(!cxt) return 1;
+
+    cxt->game_state_manager = malloc(sizeof(GameStateManager));
+    if(!cxt->game_state_manager){
+        SDL_Log("ERROR::Failed To Allocate Game State Manager\n");
+        return 2;
+    }
+
+    cxt->game_state_manager->state_pool[STATE_MAIN_MENU] = init_state_main_menu(cxt);
+    if(!cxt->game_state_manager->state_pool[STATE_MAIN_MENU]){
+        SDL_Log("ERROR::Init Main Main Menu State Failed\n");
+        return 3;
+    }
+
+    cxt->game_state_manager->state_pool[STATE_GAME_PLAYING] = init_state_game_playing(cxt);
+    if(!cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]){
+        SDL_Log("ERROR::Init Main Game Playing State Failed\n");
+        return 4;
+    }
+
+    cxt->game_state_manager->state_head.state = NULL;
+    cxt->game_state_manager->state_head.next  = NULL;
+
+    cxt->game_state_manager->state_tail = &cxt->game_state_manager->state_head;
 
     return 0;
 }
@@ -64,6 +94,12 @@ GameContext *init_game_context(){
 
     if(init_sdl(new_game_cxt)){
         SDL_Log("ERROR::Init SDL Failed\n");
+        cleanup_game_context(new_game_cxt);
+        return NULL;
+    }
+
+    if(!init_game_state_manager){
+        SDL_Log("ERROR::Init Game State Manager Failed\n");
         cleanup_game_context(new_game_cxt);
         return NULL;
     }

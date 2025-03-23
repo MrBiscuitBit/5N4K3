@@ -14,6 +14,8 @@
 #define BOARD_OFFSET_X ((WND_WIDTH / 2) - ((BOARD_WIDTH * CELL_SIZE) / 2))
 #define BOARD_OFFSET_Y ((WND_HEIGHT / 2) - ((BOARD_HEIGHT * CELL_SIZE) / 2))
 
+#define MAX_STATES 5
+
 typedef enum CELL{
     EMPTY, SNAKE, APPLE
 }CELL;
@@ -21,5 +23,11 @@ typedef enum CELL{
 typedef enum DIRECTION{
     UP, RIGHT, DOWN, LEFT
 }DIRECTION;
+
+typedef enum GAMESTATES{
+    STATE_MAIN_MENU,
+    STATE_GAME_PLAYING,
+    STATE_COUNT
+}GAMESTATES;
 
 #endif
