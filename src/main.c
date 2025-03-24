@@ -5,6 +5,8 @@ int main(int argc, char *argv[]){
 
     GameContext *game = init_game_context();
 
+    push_state(game, game->game_state_manager->state_pool[STATE_MAIN_MENU]);
+    
     Uint64 previous_time, current_time;
     previous_time = SDL_GetTicks();
 

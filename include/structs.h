@@ -3,6 +3,10 @@
 
 #include "common.h"
 
+typedef struct GameState GameState;
+typedef struct GameStateNode GameStateNode;
+typedef struct GameContext GameContext;
+
 typedef struct vec2{
     float x, y;
 }vec2;
@@ -45,6 +49,8 @@ typedef struct GameStateNode{
 typedef struct GameStateManager{
     GameState *state_pool[STATE_COUNT];
     GameStateNode state_head, *state_tail;
+    int pending_action;
+    GameState *pending_state;
     int state_counter;
 }GameStateManager;
 

@@ -98,7 +98,7 @@ GameContext *init_game_context(){
         return NULL;
     }
 
-    if(!init_game_state_manager){
+    if(init_game_state_manager(new_game_cxt)){
         SDL_Log("ERROR::Init Game State Manager Failed\n");
         cleanup_game_context(new_game_cxt);
         return NULL;

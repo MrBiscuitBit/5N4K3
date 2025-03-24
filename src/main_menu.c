@@ -13,7 +13,11 @@ static void handle_state_events_main_menu(GameContext *cxt, SDL_Event *event){
 
         switch(event->key.scancode){
             case SDL_SCANCODE_ESCAPE:
+                commit_pending_action(cxt->game_state_manager, STATE_ACTION_POP, NULL);
                 cxt->app.running = 0;
+                break;
+            case SDL_SCANCODE_SPACE:
+                commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWITCH, cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]);
                 break;
             default:
                 break;
@@ -56,6 +60,7 @@ GameState *init_state_main_menu(GameContext *cxt){
     }
 
     main_menu->state_enter = enter_state_main_menu;
+    main_menu->state_handle_events = handle_state_events_main_menu;
     main_menu->state_update = update_state_main_menu;
     main_menu->state_render = render_state_main_menu;
     main_menu->state_exit = exit_state_main_menu;

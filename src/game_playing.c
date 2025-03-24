@@ -1,9 +1,7 @@
 #include "game_playing.h"
 
 static void enter_state_game_playing(GameContext *cxt){
-
-    if(!cxt) return;
-
+    if(!cxt) return;    
     return;
 }
 
@@ -16,7 +14,7 @@ static void handle_state_events_game_playing(GameContext *cxt, SDL_Event *event)
         switch(event->key.scancode){
             case SDL_SCANCODE_ESCAPE:
                 if(cxt->game_over){
-                    cxt->app.running = 0;
+                    commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWITCH, cxt->game_state_manager->state_pool[STATE_MAIN_MENU]);
                     break;
                 }
                 cxt->game_over = 1;
@@ -86,10 +84,11 @@ GameState *init_state_game_playing(GameContext *cxt){
     game_playing = malloc(sizeof(GameState));
     if(!game_playing){
         SDL_Log("ERROR::Failed To Allocate Game Playing State\n");
-        return 2;
+        return NULL;
     }
 
     game_playing->state_enter = enter_state_game_playing;
+    game_playing->state_handle_events = handle_state_events_game_playing;
     game_playing->state_update = update_state_game_playing;
     game_playing->state_render = render_state_game_playing;
     game_playing->state_exit = exit_state_game_playing;
