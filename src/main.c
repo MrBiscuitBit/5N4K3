@@ -10,7 +10,7 @@ int main(int argc, char *argv[]){
     Uint64 previous_time, current_time;
     previous_time = SDL_GetTicks();
 
-    game->game_over = 0;
+    game->game_stop = 0;
     game->app.running = 1;
     while(game->app.running){
 

@@ -15,19 +15,6 @@ typedef struct vec4{
     float r, g, b, a;
 }vec4;
 
-typedef struct ButtonFlags{
-    bool hovered;
-    bool pressed;
-}ButtonFlags;
-
-typedef struct Button{
-    vec4 color, hover_color;
-    vec2 pos, size;
-    const char *label;
-    ButtonFlags button_flags;
-    void(*on_click)(GameContext *cxt);
-}Button;
-
 typedef struct Snake{
     vec2 pos;
     struct Snake *next, *prev;
@@ -42,13 +29,18 @@ typedef struct PlayerData{
     Snake *snake_head, *snake_tail;
 }PlayerData;
 
-typedef struct App{
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    bool running;
-    Uint64 delta_time;
-    float mouse_x, mouse_y;
-}App;
+typedef struct ButtonFlags{
+    bool hovered;
+    bool pressed;
+}ButtonFlags;
+
+typedef struct Button{
+    vec4 color, hover_color;
+    vec2 pos, size;
+    const char *label;
+    ButtonFlags button_flags;
+    void(*on_click)(GameContext *cxt);
+}Button;
 
 typedef struct GameState{
     Button *button_pool;
@@ -74,12 +66,20 @@ typedef struct GameStateManager{
     int state_counter;
 }GameStateManager;
 
+typedef struct App{
+    SDL_Window *window;
+    SDL_Renderer *renderer;
+    bool running;
+    Uint64 delta_time;
+    float mouse_x, mouse_y;
+}App;
+
 typedef struct GameContext{
     App app;
     GameStateManager *game_state_manager;
     int board[BOARD_HEIGHT][BOARD_WIDTH];
     PlayerData *player_data;
-    int game_over;
+    int game_stop;
     vec2 apple;
     int current_score;
 }GameContext;

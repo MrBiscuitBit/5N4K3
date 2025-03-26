@@ -71,7 +71,7 @@ void update_apple(GameContext *cxt){
         update_snake(cxt);
         clear_board(cxt);
         update_board(cxt);
-        cxt->game_over = 1;
+        cxt->game_stop = 1;
         SDL_Log("Player Wins!");
     }
 }
@@ -119,30 +119,30 @@ void update_snake(GameContext *cxt){
             if(cxt->player_data->snake_head->pos.y > 0 &&
                cxt->board[(int)cxt->player_data->snake_head->pos.y - 1][(int)cxt->player_data->snake_head->pos.x] != SNAKE)
                 cxt->player_data->snake_head->pos.y--;
-            else cxt->game_over = 1;
+            else cxt->game_stop = 1;
             break;
         case RIGHT:
             if(cxt->player_data->snake_head->pos.x < (BOARD_WIDTH - 1) &&
                cxt->board[(int)cxt->player_data->snake_head->pos.y][(int)cxt->player_data->snake_head->pos.x + 1] != SNAKE)
                 cxt->player_data->snake_head->pos.x++;
-            else cxt->game_over = 1;
+            else cxt->game_stop = 1;
             break;
         case DOWN:
             if(cxt->player_data->snake_head->pos.y < (BOARD_HEIGHT - 1) &&
                cxt->board[(int)cxt->player_data->snake_head->pos.y + 1][(int)cxt->player_data->snake_head->pos.x] != SNAKE)
                 cxt->player_data->snake_head->pos.y++;
-            else cxt->game_over = 1;
+            else cxt->game_stop = 1;
             break;
         case LEFT:
             if(cxt->player_data->snake_head->pos.x > 0 &&
                cxt->board[(int)cxt->player_data->snake_head->pos.y][(int)cxt->player_data->snake_head->pos.x - 1] != SNAKE)
                 cxt->player_data->snake_head->pos.x--;
-            else cxt->game_over = 1;
+            else cxt->game_stop = 1;
         default:
             break;
     }
 
-    if(cxt->game_over){
+    if(cxt->game_stop){
         SDL_Log("Game Over!\n");
         return;
     }

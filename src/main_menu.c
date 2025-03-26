@@ -51,7 +51,7 @@ static void render_state_main_menu(GameContext *cxt){
 }
 
 static void exit_state_main_menu(GameContext *cxt){
-    
+
     if(!cxt || !cxt->game_state_manager || !cxt->game_state_manager->state_tail) return;
 
     GameState *current_state = cxt->game_state_manager->state_tail->state;
@@ -65,6 +65,11 @@ static void exit_state_main_menu(GameContext *cxt){
 static void on_click_button_play(GameContext *cxt){
     if(!cxt || !cxt->game_state_manager) return;
     commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWITCH, cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]);
+}
+
+static void on_click_button_quit(GameContext *cxt){
+    if(!cxt) return;
+    cxt->app.running = 0;
 }
 
 GameState *init_state_main_menu(GameContext *cxt){
@@ -85,7 +90,7 @@ GameState *init_state_main_menu(GameContext *cxt){
     main_menu->state_render = render_state_main_menu;
     main_menu->state_exit = exit_state_main_menu;
 
-    main_menu->button_count = 1;
+    main_menu->button_count = 2;
     main_menu->button_pool = malloc(sizeof(Button) * main_menu->button_count);
     if(!main_menu->button_pool){
         SDL_Log("ERROR::Failed To Allocate Button Pool\n");
@@ -95,6 +100,9 @@ GameState *init_state_main_menu(GameContext *cxt){
 
     main_menu->button_pool[0] = init_button((vec2){(WND_WIDTH / 2), (WND_HEIGHT / 2)}, (vec2){300, 100}, "PLAY_GAME");
     main_menu->button_pool[0].on_click = on_click_button_play;
+
+    main_menu->button_pool[1] = init_button((vec2){(WND_WIDTH / 2), (WND_HEIGHT / 2) + 150}, (vec2){300, 100}, "QUIT_BUTTON");
+    main_menu->button_pool[1].on_click = on_click_button_quit;
 
     main_menu->name = "Main_Menu_State";
 

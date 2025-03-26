@@ -13,11 +13,11 @@ static void handle_state_events_game_playing(GameContext *cxt, SDL_Event *event)
 
         switch(event->key.scancode){
             case SDL_SCANCODE_ESCAPE:
-                if(cxt->game_over){
+                if(cxt->game_stop){
                     commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWITCH, cxt->game_state_manager->state_pool[STATE_MAIN_MENU]);
                     break;
                 }
-                cxt->game_over = 1;
+                cxt->game_stop = 1;
                 break;
             case SDL_SCANCODE_UP:
                 cxt->player_data->directional_input = UP;
@@ -32,11 +32,11 @@ static void handle_state_events_game_playing(GameContext *cxt, SDL_Event *event)
                 cxt->player_data->directional_input = LEFT;
                 break;
             case SDL_SCANCODE_SPACE:
-                if(cxt->game_over){
+                if(cxt->game_stop){
                     clear_board(cxt);
                     reset_snake(cxt);
                     cxt->apple = (vec2){1, 1};
-                    cxt->game_over = 0;
+                    cxt->game_stop = 0;
                 }
                 break;
             default:
@@ -51,7 +51,7 @@ static void update_state_game_playing(GameContext *cxt){
 
     if(!cxt) return;
 
-    if(!cxt->game_over){
+    if(!cxt->game_stop){
         if((SDL_GetTicks() - cxt->player_data->last_move_time) >= cxt->player_data->move_delay){
             update_snake(cxt);
             cxt->player_data->last_move_time = SDL_GetTicks();
