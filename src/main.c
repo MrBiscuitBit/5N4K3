@@ -10,10 +10,9 @@ int main(int argc, char *argv[]){
     Uint64 previous_time, current_time;
     previous_time = SDL_GetTicks();
 
-    game->game_stop = 0;
     game->app.running = 1;
     while(game->app.running){
-
+        
         SDL_GetMouseState(&game->app.mouse_x, &game->app.mouse_y);
         
         current_time = SDL_GetTicks();

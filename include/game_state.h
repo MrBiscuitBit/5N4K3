@@ -4,7 +4,7 @@
 #include "button.h"
 #include "structs.h"
 #include "render.h"
-#include "update.h"
+#include "util.h"
 
 void push_state(GameContext*cxt, GameState *state);
 void pop_state(GameContext *cxt);

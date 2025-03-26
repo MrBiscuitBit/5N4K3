@@ -89,7 +89,7 @@ GameState *init_state_main_menu(GameContext *cxt){
     main_menu->state_update = update_state_main_menu;
     main_menu->state_render = render_state_main_menu;
     main_menu->state_exit = exit_state_main_menu;
-
+    
     main_menu->button_count = 2;
     main_menu->button_pool = malloc(sizeof(Button) * main_menu->button_count);
     if(!main_menu->button_pool){

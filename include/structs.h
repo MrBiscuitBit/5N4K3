@@ -29,6 +29,15 @@ typedef struct PlayerData{
     Snake *snake_head, *snake_tail;
 }PlayerData;
 
+typedef struct GamePlayData{
+    int board[BOARD_HEIGHT][BOARD_WIDTH];
+    PlayerData *player_data;
+    bool game_stop;
+    vec2 apple;
+    int current_score;
+    bool snake_dead;
+}GamePlayData;
+
 typedef struct ButtonFlags{
     bool hovered;
     bool pressed;
@@ -45,11 +54,13 @@ typedef struct Button{
 typedef struct GameState{
     Button *button_pool;
     int button_count;
+    void *state_data;
     void(*state_enter)(GameContext *cxt);
     void(*state_handle_events)(GameContext *cxt, SDL_Event *event);
     void(*state_update)(GameContext *cxt);
     void(*state_render)(GameContext *cxt);
     void(*state_exit)(GameContext *cxt);
+    void(*cleanup_data)(GameState *state);
     const char *name;
 }GameState;
 
@@ -77,11 +88,6 @@ typedef struct App{
 typedef struct GameContext{
     App app;
     GameStateManager *game_state_manager;
-    int board[BOARD_HEIGHT][BOARD_WIDTH];
-    PlayerData *player_data;
-    int game_stop;
-    vec2 apple;
-    int current_score;
 }GameContext;
 
 #endif
