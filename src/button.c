@@ -34,14 +34,14 @@ void check_states_current_button(GameContext *cxt){
     if(!cxt || !cxt->game_state_manager || !cxt->game_state_manager->state_tail) return;
 
     GameState *current_state = cxt->game_state_manager->state_tail->state;
-    if(!current_state->button_pool || current_state->button_count == 0) return;
+    if(!current_state->button_pool) return;
     for(int i = 0; i < current_state->button_count; i++){
         Button *current_button = &current_state->button_pool[i];
         if(check_button_pointer_collision(cxt, current_button)){
-            current_button->button_flags.is_hovering = 1;
+            current_button->button_flags.hovered = 1;
         }
         else
-            current_button->button_flags.is_hovering = 0;
+            current_button->button_flags.hovered = 0;
     }
 
 }
@@ -51,7 +51,7 @@ void render_states_current_button(GameContext *cxt){
     if(!cxt || !cxt->game_state_manager || !cxt->game_state_manager->state_tail) return;
 
     GameState *current_state = cxt->game_state_manager->state_tail->state;
-    if(!current_state->button_pool || current_state->button_count == 0) return;
+    if(!current_state->button_pool) return;
     for(int i = 0; i < current_state->button_count; i++){
         Button *current_button = &current_state->button_pool[i];
         SDL_FRect button_rect;
@@ -60,7 +60,7 @@ void render_states_current_button(GameContext *cxt){
         button_rect.w = current_button->size.x;
         button_rect.h = current_button->size.y;
 
-        if(current_button->button_flags.is_hovering)
+        if(current_button->button_flags.hovered)
             SDL_SetRenderDrawColor(cxt->app.renderer, current_button->hover_color.r, current_button->hover_color.g,
                                    current_button->hover_color.b, current_button->hover_color.a);
         else

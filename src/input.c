@@ -11,10 +11,27 @@ void handle_events(GameContext *cxt){
             cxt->app.running = 0;
             return;
         }
+        //Handle State Events
         if(cxt->game_state_manager->state_tail && cxt->game_state_manager->state_tail->state &&
            cxt->game_state_manager->state_tail->state->state_handle_events)
         {
-            cxt->game_state_manager->state_tail->state->state_handle_events(cxt, &event);
+            GameState *current_state = cxt->game_state_manager->state_tail->state;
+
+            //Check Button Pressed On Mouse Down
+            if(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN){
+
+                if(current_state->button_pool != NULL){
+                    for(int i = 0; i < current_state->button_count; i++){
+                        Button *current_button = &current_state->button_pool[i];
+                        if(current_button->button_flags.hovered)
+                            current_button->button_flags.pressed = 1;
+                    }
+                }
+
+            }
+
+            //Call Handle State Events
+            current_state->state_handle_events(cxt, &event);
         }
 
     }

@@ -16,7 +16,8 @@ typedef struct vec4{
 }vec4;
 
 typedef struct ButtonFlags{
-    bool is_hovering;
+    bool hovered;
+    bool pressed;
 }ButtonFlags;
 
 typedef struct Button{
@@ -24,6 +25,7 @@ typedef struct Button{
     vec2 pos, size;
     const char *label;
     ButtonFlags button_flags;
+    void(*on_click)(GameContext *cxt);
 }Button;
 
 typedef struct Snake{
