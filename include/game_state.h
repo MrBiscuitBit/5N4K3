@@ -1,6 +1,7 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
+#include "button.h"
 #include "structs.h"
 #include "render.h"
 #include "update.h"

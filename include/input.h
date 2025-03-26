@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "util.h"
+#include "game_state.h"
 
 void handle_events(GameContext *cxt);
 

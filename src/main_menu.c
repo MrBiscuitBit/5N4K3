@@ -13,7 +13,6 @@ static void handle_state_events_main_menu(GameContext *cxt, SDL_Event *event){
 
         switch(event->key.scancode){
             case SDL_SCANCODE_ESCAPE:
-                commit_pending_action(cxt->game_state_manager, STATE_ACTION_POP, NULL);
                 cxt->app.running = 0;
                 break;
             case SDL_SCANCODE_SPACE:
@@ -33,13 +32,7 @@ static void update_state_main_menu(GameContext *cxt){
 }
 
 static void render_state_main_menu(GameContext *cxt){
-
     if(!cxt) return;
-
-    SDL_FRect rect = {0, 0, 100, 100};
-    SDL_SetRenderDrawColor(cxt->app.renderer, 0, 0, 255, 255);
-    SDL_RenderFillRect(cxt->app.renderer, &rect);
-
     return;
 }
 
@@ -58,12 +51,23 @@ GameState *init_state_main_menu(GameContext *cxt){
         SDL_Log("ERROR::Failed To Allocate MAIN MENU STATE\n");
         return NULL;
     }
+    memset(main_menu, 0, sizeof(GameState));
 
     main_menu->state_enter = enter_state_main_menu;
     main_menu->state_handle_events = handle_state_events_main_menu;
     main_menu->state_update = update_state_main_menu;
     main_menu->state_render = render_state_main_menu;
     main_menu->state_exit = exit_state_main_menu;
+
+    main_menu->button_count = 1;
+    main_menu->button_pool = malloc(sizeof(Button) * main_menu->button_count);
+    if(!main_menu->button_pool){
+        SDL_Log("ERROR::Failed To Allocate Button Pool\n");
+        return NULL;
+    }
+    memset(main_menu->button_pool, 0, sizeof(sizeof(Button) * main_menu->button_count));
+
+    main_menu->button_pool[0] = init_button((vec2){(WND_WIDTH / 2), (WND_HEIGHT / 2)}, (vec2){300, 100}, "QUIT_GAME");
 
     main_menu->name = "Main_Menu_State";
 

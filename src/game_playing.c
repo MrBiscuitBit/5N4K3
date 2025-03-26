@@ -86,6 +86,7 @@ GameState *init_state_game_playing(GameContext *cxt){
         SDL_Log("ERROR::Failed To Allocate Game Playing State\n");
         return NULL;
     }
+    memset(game_playing, 0, sizeof(GameState));
 
     game_playing->state_enter = enter_state_game_playing;
     game_playing->state_handle_events = handle_state_events_game_playing;
@@ -93,6 +94,9 @@ GameState *init_state_game_playing(GameContext *cxt){
     game_playing->state_render = render_state_game_playing;
     game_playing->state_exit = exit_state_game_playing;
 
+    game_playing->button_count = 0;
+    game_playing->button_pool = NULL;
+    
     game_playing->name = "Game_Playing_State";
 
     return game_playing;

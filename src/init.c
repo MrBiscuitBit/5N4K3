@@ -48,7 +48,7 @@ static int init_player_data(GameContext *cxt){
     cxt->player_data->snake_tail = cxt->player_data->snake_head;
 
     //Timer For Movement
-    cxt->player_data->move_delay = 75;
+    cxt->player_data->move_delay = 85;
 
     return 0;
 }

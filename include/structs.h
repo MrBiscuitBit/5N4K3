@@ -11,6 +11,21 @@ typedef struct vec2{
     float x, y;
 }vec2;
 
+typedef struct vec4{
+    float r, g, b, a;
+}vec4;
+
+typedef struct ButtonFlags{
+    bool is_hovering;
+}ButtonFlags;
+
+typedef struct Button{
+    vec4 color, hover_color;
+    vec2 pos, size;
+    const char *label;
+    ButtonFlags button_flags;
+}Button;
+
 typedef struct Snake{
     vec2 pos;
     struct Snake *next, *prev;
@@ -30,9 +45,12 @@ typedef struct App{
     SDL_Renderer *renderer;
     bool running;
     Uint64 delta_time;
+    float mouse_x, mouse_y;
 }App;
 
 typedef struct GameState{
+    Button *button_pool;
+    int button_count;
     void(*state_enter)(GameContext *cxt);
     void(*state_handle_events)(GameContext *cxt, SDL_Event *event);
     void(*state_update)(GameContext *cxt);

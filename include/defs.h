@@ -7,8 +7,8 @@
 #define WND_WIDTH 1280
 #define WND_HEIGHT 960
 
-#define BOARD_WIDTH 20
-#define BOARD_HEIGHT 20
+#define BOARD_WIDTH 16
+#define BOARD_HEIGHT 16
 #define CELL_SIZE 35
 
 #define BOARD_OFFSET_X ((WND_WIDTH / 2) - ((BOARD_WIDTH * CELL_SIZE) / 2))

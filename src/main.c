@@ -14,6 +14,8 @@ int main(int argc, char *argv[]){
     game->app.running = 1;
     while(game->app.running){
 
+        SDL_GetMouseState(&game->app.mouse_x, &game->app.mouse_y);
+        
         current_time = SDL_GetTicks();
         game->app.delta_time = current_time - previous_time;
         previous_time = current_time;

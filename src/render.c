@@ -2,7 +2,7 @@
 
 void prepare_scene(GameContext *cxt){
     if(!cxt) return;
-    SDL_SetRenderDrawColor(cxt->app.renderer, 155, 155, 155, 155);
+    SDL_SetRenderDrawColor(cxt->app.renderer, 255, 255, 255, 155);
     SDL_RenderClear(cxt->app.renderer);
 }
 

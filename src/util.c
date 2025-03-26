@@ -79,13 +79,15 @@ void cleanup_state_stack(GameStateManager *manager){
 void cleanup_state(GameState *state){
 
     if(!state) return;
-
+    
     state->name = NULL;
     state->state_enter = NULL;
     state->state_handle_events = NULL;
     state->state_update = NULL;
     state->state_render = NULL;
     state->state_exit = NULL;
+
+    safe_free((void **)&state->button_pool);
 
     safe_free((void **)&state);
 }
