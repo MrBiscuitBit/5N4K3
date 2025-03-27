@@ -10,12 +10,13 @@ static void draw_board(GameContext *cxt);
 static void enter_state_game_playing(GameContext *cxt){
     if(!cxt) return;
     reset_snake(cxt);
-    draw_board(cxt);
     GamePlayData *game_play_data = (GamePlayData *)cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]->state_data;
     if(game_play_data){
         game_play_data->game_stop = 1;
+        clear_board(game_play_data);
         update_board(game_play_data);
     }
+    draw_board(cxt);
     return;
 }
 
@@ -49,9 +50,12 @@ static void handle_state_events_game_playing(GameContext *cxt, SDL_Event *event)
             case SDL_SCANCODE_SPACE:
                 if(data->game_stop){
                     clear_board(data);
-                    reset_snake(cxt);
-                    data->apple = (vec2){1, 1};
+                    if(data->snake_dead){
+                        reset_snake(cxt);
+                        data->apple = (vec2){1, 1};
+                    }
                     data->game_stop = 0;
+                    data->snake_dead = 0;
                 }
                 break;
             default:
@@ -185,31 +189,43 @@ static void update_snake(GamePlayData *game_play_data){
             if(game_play_data->player_data->snake_head->pos.y > 0 &&
                game_play_data->board[(int)game_play_data->player_data->snake_head->pos.y - 1][(int)game_play_data->player_data->snake_head->pos.x] != SNAKE)
                 game_play_data->player_data->snake_head->pos.y--;
-            else game_play_data->game_stop = 1;
+            else{
+                game_play_data->game_stop = 1;
+                game_play_data->snake_dead = 1;
+            }
             break;
         case RIGHT:
             if(game_play_data->player_data->snake_head->pos.x < (BOARD_WIDTH - 1) &&
                game_play_data->board[(int)game_play_data->player_data->snake_head->pos.y][(int)game_play_data->player_data->snake_head->pos.x + 1] != SNAKE)
                 game_play_data->player_data->snake_head->pos.x++;
-            else game_play_data->game_stop = 1;
+            else{
+                game_play_data->game_stop = 1;
+                game_play_data->snake_dead = 1;
+            }
             break;
         case DOWN:
             if(game_play_data->player_data->snake_head->pos.y < (BOARD_HEIGHT - 1) &&
                game_play_data->board[(int)game_play_data->player_data->snake_head->pos.y + 1][(int)game_play_data->player_data->snake_head->pos.x] != SNAKE)
                 game_play_data->player_data->snake_head->pos.y++;
-            else game_play_data->game_stop = 1;
+            else{
+                game_play_data->game_stop = 1;
+                game_play_data->snake_dead = 1;
+            }
             break;
         case LEFT:
             if(game_play_data->player_data->snake_head->pos.x > 0 &&
                game_play_data->board[(int)game_play_data->player_data->snake_head->pos.y][(int)game_play_data->player_data->snake_head->pos.x - 1] != SNAKE)
                 game_play_data->player_data->snake_head->pos.x--;
-            else game_play_data->game_stop = 1;
-        default:
+            else{
+                game_play_data->game_stop = 1;
+                game_play_data->snake_dead = 1;
+            }        
+            default:
             break;
     }
 
     if(game_play_data->game_stop){
-        SDL_Log("Game Over!\n");
+        //SDL_Log("Game Over!\n");
         return;
     }
 
@@ -388,16 +404,19 @@ static int init_game_play_data(GameState *state){
         return 3;
     }
 
-    for(int i = 0; i < BOARD_HEIGHT; i++){
-        for(int j = 0; j < BOARD_WIDTH; j++){
-            SDL_Log("%d", new_data->board[i][j]);
-        }
-    }
-
     new_data->apple = (vec2){1, 1};
     new_data->game_stop = 1;
 
     return 0;
+}
+
+static void on_click_button_pause(GameContext *cxt){
+    if(!cxt) return;
+    
+    for(int i = 0; i < 10; i++){
+        SDL_Log("- I'm Settingsed I'm Settingsed I'm Settingsed I'm Settingsed I'm Settingsed I'm Settingsed I'm Settingsed -\n");
+    }
+    
 }
 
 GameState *init_state_game_playing(GameContext *cxt){
@@ -419,8 +438,12 @@ GameState *init_state_game_playing(GameContext *cxt){
     game_playing->state_exit = exit_state_game_playing;
     game_playing->cleanup_data = cleanup_state_game_playing_data;
 
-    game_playing->button_count = 0;
-    game_playing->button_pool = NULL;
+    game_playing->button_count = 1;
+    game_playing->button_pool = malloc(sizeof(Button) * game_playing->button_count);
+    memset(game_playing->button_pool, 0, (sizeof(Button) * game_playing->button_count));
+
+    game_playing->button_pool[0] = init_button((vec2){75, 75}, (vec2){100, 100}, "PAUSE_BUTTON");
+    game_playing->button_pool[0].on_click = on_click_button_pause;
     
     init_game_play_data(game_playing);
     if(!game_playing->state_data){

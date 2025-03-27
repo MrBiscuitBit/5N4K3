@@ -44,7 +44,8 @@ typedef struct ButtonFlags{
 }ButtonFlags;
 
 typedef struct Button{
-    vec4 color, hover_color;
+    vec4 current_color;
+    vec4 base_color, hover_color;
     vec2 pos, size;
     const char *label;
     ButtonFlags button_flags;
