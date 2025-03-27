@@ -16,7 +16,7 @@ static void handle_state_events_main_menu(GameContext *cxt, SDL_Event *event){
                 cxt->app.running = 0;
                 break;
             case SDL_SCANCODE_SPACE:
-                commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWITCH, cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]);
+                commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWAP, cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]);
                 break;
             default:
                 break;
@@ -40,7 +40,7 @@ static void exit_state_main_menu(GameContext *cxt){
 
     if(!cxt || !cxt->game_state_manager || !cxt->game_state_manager->state_tail) return;
 
-    GameState *current_state = cxt->game_state_manager->state_tail->state;
+    GameState *current_state = cxt->game_state_manager->state_pool[STATE_MAIN_MENU];    
     for(int i = 0; i < current_state->button_count; i++){
         current_state->button_pool[i].button_flags.hovered = 0;
         current_state->button_pool[i].button_flags.pressed = 0;
@@ -50,7 +50,7 @@ static void exit_state_main_menu(GameContext *cxt){
 
 static void on_click_button_play(GameContext *cxt){
     if(!cxt || !cxt->game_state_manager) return;
-    commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWITCH, cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]);
+    commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWAP, cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]);
 }
 
 static void on_click_button_quit(GameContext *cxt){
@@ -77,7 +77,7 @@ GameState *init_state_main_menu(GameContext *cxt){
     main_menu->state_exit = exit_state_main_menu;
 
     main_menu->button_count = 2;
-    main_menu->button_pool = malloc(sizeof(Button) * main_menu->button_count);
+    main_menu->button_pool = (main_menu->button_count <= 0)? NULL: malloc(sizeof(Button) * main_menu->button_count);
     if(!main_menu->button_pool){
         SDL_Log("ERROR::Failed To Allocate Button Pool\n");
         return NULL;

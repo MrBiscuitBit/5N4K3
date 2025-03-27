@@ -30,7 +30,7 @@ static void handle_state_events_game_playing(GameContext *cxt, SDL_Event *event)
         switch(event->key.scancode){
             case SDL_SCANCODE_ESCAPE:
                 if(data->game_stop){
-                    commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWITCH, cxt->game_state_manager->state_pool[STATE_MAIN_MENU]);
+                    commit_pending_action(cxt->game_state_manager, STATE_ACTION_SWAP, cxt->game_state_manager->state_pool[STATE_MAIN_MENU]);
                     break;
                 }
                 data->game_stop = 1;
@@ -313,11 +313,19 @@ static void render_state_game_playing(GameContext *cxt){
 
 static void exit_state_game_playing(GameContext *cxt){
     if(!cxt || !cxt->game_state_manager || !cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]) return;
-    reset_snake(cxt);
-    GamePlayData *game_play_data = (GamePlayData *)cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]->state_data;
+
+    GameState *current_state = cxt->game_state_manager->state_pool[STATE_GAME_PLAYING];
+    for(int i = 0; i < current_state->button_count; i++){
+        current_state->button_pool[i].button_flags.hovered = 0;
+        current_state->button_pool[i].button_flags.pressed = 0;
+    }
+
+    GamePlayData *game_play_data = (GamePlayData *)current_state->state_data;
     if(game_play_data){
         game_play_data->game_stop = 1;
     }
+
+    
     return;
 }
 
@@ -412,11 +420,9 @@ static int init_game_play_data(GameState *state){
 
 static void on_click_button_pause(GameContext *cxt){
     if(!cxt) return;
-    
-    for(int i = 0; i < 10; i++){
-        SDL_Log("- I'm Settingsed I'm Settingsed I'm Settingsed I'm Settingsed I'm Settingsed I'm Settingsed I'm Settingsed -\n");
-    }
-    
+    commit_pending_action(cxt->game_state_manager, STATE_ACTION_PUSH, cxt->game_state_manager->state_pool[STATE_PAUSE_MENU]);
+    GamePlayData *game_play_data = (GamePlayData *)cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]->state_data;
+    game_play_data->game_stop = 1;
 }
 
 GameState *init_state_game_playing(GameContext *cxt){
@@ -439,7 +445,7 @@ GameState *init_state_game_playing(GameContext *cxt){
     game_playing->cleanup_data = cleanup_state_game_playing_data;
 
     game_playing->button_count = 1;
-    game_playing->button_pool = malloc(sizeof(Button) * game_playing->button_count);
+    game_playing->button_pool = (game_playing->button_count <= 0)? NULL: malloc(sizeof(Button) * game_playing->button_count);
     memset(game_playing->button_pool, 0, (sizeof(Button) * game_playing->button_count));
 
     game_playing->button_pool[0] = init_button((vec2){75, 75}, (vec2){100, 100}, "PAUSE_BUTTON");

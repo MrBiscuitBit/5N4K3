@@ -35,7 +35,7 @@ void check_states_current_button(GameContext *cxt){
     if(!cxt || !cxt->game_state_manager || !cxt->game_state_manager->state_tail) return;
 
     GameState *current_state = cxt->game_state_manager->state_tail->state;
-    if(!current_state->button_pool) return;
+    if(!current_state || !current_state->button_pool) return;
     for(int i = 0; i < current_state->button_count; i++){
         Button *current_button = &current_state->button_pool[i];
         if(check_button_pointer_collision(cxt, current_button)){
@@ -47,44 +47,42 @@ void check_states_current_button(GameContext *cxt){
 
 }
 
-void render_states_current_button(GameContext *cxt){
+void render_state_buttons(GameContext *cxt){
 
     if(!cxt || !cxt->game_state_manager || !cxt->game_state_manager->state_tail) return;
 
     SDL_FRect button_rect;
-    GameState *current_state = cxt->game_state_manager->state_tail->state;
-    if(!current_state->button_pool) return;
-    for(int i = 0; i < current_state->button_count; i++){
-        Button *current_button = &current_state->button_pool[i];
+    GameStateNode *state_node = cxt->game_state_manager->state_head.next;
+    while(state_node != NULL){
 
-        button_rect.x = current_button->pos.x - (current_button->size.x / 2);
-        button_rect.y = current_button->pos.y - (current_button->size.y / 2);
-        button_rect.w = current_button->size.x;
-        button_rect.h = current_button->size.y;
+        GameState *current_state = state_node->state;
+        if(!current_state || !current_state->button_pool) return;
+        for(int i = 0; i < current_state->button_count; i++){
+            Button *current_button = &current_state->button_pool[i];
 
-    ///*
-        float color_epsilon = 0.000005f;
-        float lerp_portion = 0.13f;
-        if(current_button->button_flags.hovered && !vec4_compare(current_button->current_color, current_button->hover_color, color_epsilon)){
-            if(!vec4_compare(current_button->current_color, current_button->hover_color, color_epsilon))
-                current_button->current_color = vec4_lerp(current_button->current_color, current_button->hover_color, lerp_portion);
+            button_rect.x = current_button->pos.x - (current_button->size.x / 2);
+            button_rect.y = current_button->pos.y - (current_button->size.y / 2);
+            button_rect.w = current_button->size.x;
+            button_rect.h = current_button->size.y;
+
+            if(current_state != cxt->game_state_manager->state_tail->state){
+                current_button->button_flags.hovered = 0;
+                current_button->button_flags.pressed = 0;
+            }
+
+            float lerp_speed = 0.13f;
+            if(current_button->button_flags.hovered && !current_button->button_flags.pressed){    
+                current_button->current_color = vec4_lerp(current_button->current_color, current_button->hover_color, lerp_speed);
+            }
+            else{
+                current_button->current_color = vec4_lerp(current_button->current_color, current_button->base_color, lerp_speed);
+            }
+        
+            SDL_SetRenderDrawColor(cxt->app.renderer, current_button->current_color.r, current_button->current_color.g, current_button->current_color.b, current_button->current_color.a);
+            SDL_RenderFillRect(cxt->app.renderer, &button_rect);
         }
-        else if(!vec4_compare(current_button->current_color, current_button->base_color, color_epsilon)){
-            if(!vec4_compare(current_button->current_color, current_button->base_color, color_epsilon))
-                current_button->current_color = vec4_lerp(current_button->current_color, current_button->base_color, lerp_portion);
-        }
-        SDL_SetRenderDrawColor(cxt->app.renderer, current_button->current_color.r, current_button->current_color.g,
-                               current_button->current_color.b, current_button->current_color.a);
-    //*/
-    /*
-        if(current_button->button_flags.hovered)
-            SDL_SetRenderDrawColor(cxt->app.renderer, current_button->hover_color.r, current_button->hover_color.g, current_button->hover_color.b, current_button->hover_color.a);
-        else
-            SDL_SetRenderDrawColor(cxt->app.renderer, current_button->base_color.r, current_button->base_color.g, current_button->base_color.b, current_button->base_color.a);
-    */
-    
-        SDL_SetRenderDrawColor(cxt->app.renderer, current_button->current_color.r, current_button->current_color.g, current_button->current_color.b, current_button->current_color.a);
-        SDL_RenderFillRect(cxt->app.renderer, &button_rect);
+
+        state_node = state_node->next;
     }
 
 }

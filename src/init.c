@@ -32,14 +32,20 @@ int init_game_state_manager(GameContext *cxt){
 
     cxt->game_state_manager->state_pool[STATE_MAIN_MENU] = init_state_main_menu(cxt);
     if(!cxt->game_state_manager->state_pool[STATE_MAIN_MENU]){
-        SDL_Log("ERROR::Init Main Main Menu State Failed\n");
+        SDL_Log("ERROR::Init Main Menu State Failed\n");
         return 3;
     }
 
     cxt->game_state_manager->state_pool[STATE_GAME_PLAYING] = init_state_game_playing(cxt);
     if(!cxt->game_state_manager->state_pool[STATE_GAME_PLAYING]){
-        SDL_Log("ERROR::Init Main Game Playing State Failed\n");
+        SDL_Log("ERROR::Init Game Playing State Failed\n");
         return 4;
+    }
+
+    cxt->game_state_manager->state_pool[STATE_PAUSE_MENU] = init_state_pause_menu(cxt);
+    if(!cxt->game_state_manager->state_pool[STATE_PAUSE_MENU]){
+        SDL_Log("ERROR::Init Pause Menu State Failed\n");
+        return 5;
     }
 
     cxt->game_state_manager->state_head.state = NULL;

@@ -23,7 +23,7 @@ void push_state(GameContext*cxt, GameState *state){
         state->state_enter(cxt);
 
     cxt->game_state_manager->state_counter++;
-    //SDL_Log("- State Pushed (%s) #%d -\n", state->name, cxt->game_state_manager->state_counter);
+    //SDL_Log("- State Pushed (%s) State Count: %d -\n", state->name, cxt->game_state_manager->state_counter);
 }
 
 void pop_state(GameContext *cxt){
@@ -51,7 +51,7 @@ void pop_state(GameContext *cxt){
     }
     
     cxt->game_state_manager->state_counter--;
-    //SDL_Log("- State Popped (%s) # %d", state_name, cxt->game_state_manager->state_counter);
+    //SDL_Log("- State Popped (%s) State Count: %d", state_name, cxt->game_state_manager->state_counter);
 }
 
 void call_state_action(GameContext *cxt){
@@ -72,9 +72,18 @@ void call_state_action(GameContext *cxt){
         case STATE_ACTION_POP:
             pop_state(cxt);
             break;
-        case STATE_ACTION_SWITCH:
+        case STATE_ACTION_SWAP:
             if(cxt->game_state_manager->pending_state != NULL){
                 pop_state(cxt);
+                push_state(cxt, cxt->game_state_manager->pending_state);
+            }
+            cxt->game_state_manager->pending_action = STATE_ACTION_NONE;
+            cxt->game_state_manager->pending_state = NULL;
+            break;
+        case STATE_ACTION_POP_SWAP:
+            if(cxt->game_state_manager->pending_state != NULL){
+                while(cxt->game_state_manager->state_counter > 0)
+                    pop_state(cxt);
                 push_state(cxt, cxt->game_state_manager->pending_state);
             }
             cxt->game_state_manager->pending_action = STATE_ACTION_NONE;
@@ -85,13 +94,15 @@ void call_state_action(GameContext *cxt){
             cxt->game_state_manager->pending_state = NULL;
             break;
     }
+
+    cxt->game_state_manager->pending_action = STATE_ACTION_NONE;
+    cxt->game_state_manager->pending_state = NULL;
 }
 
 void commit_pending_action(GameStateManager *manager, int state_action, GameState *state){
 
     if(!manager) return;
 
-    //const char *action;
     switch(state_action){
         case STATE_ACTION_NONE:
             manager->pending_action = STATE_ACTION_NONE;
@@ -100,25 +111,32 @@ void commit_pending_action(GameStateManager *manager, int state_action, GameStat
             if(state != NULL){
                 manager->pending_action = STATE_ACTION_PUSH;
                 manager->pending_state = state;
-                //action = "STATE ACTION PUSH";
             }
             else{
-                SDL_Log("WARNING::STATE ACTION PUSH TO COMMIT; Pending State Not Given\n");
+                SDL_Log("WARNING::STATE ACTION PUSH FAILED TO COMMIT; Pending State Not Given\n");
                 manager->pending_action = STATE_ACTION_NONE;
             }
             break;
         case STATE_ACTION_POP:
             manager->pending_action = STATE_ACTION_POP;
-            //action = "STATE ACTION POP";
             break;
-        case STATE_ACTION_SWITCH:
+        case STATE_ACTION_SWAP:
             if(state != NULL){
-                manager->pending_action = STATE_ACTION_SWITCH;
+                manager->pending_action = STATE_ACTION_SWAP;
                 manager->pending_state = state;
-                //action = "STATE ACTION SWITCH";
             }
             else{
-                SDL_Log("WARNING::STATE ACTION SWITCH TO COMMIT; Pending State Not Given\n");
+                SDL_Log("WARNING::STATE ACTION SWITCH FAILED TO COMMIT; Pending State Not Given\n");
+                manager->pending_action = STATE_ACTION_NONE;
+            }
+            break;
+        case STATE_ACTION_POP_SWAP:
+            if(state != NULL){
+                manager->pending_action = STATE_ACTION_POP_SWAP;
+                manager->pending_state = state;
+            }
+            else{
+                SDL_Log("WARNING::STATE ACTION POP AND SWITCH FAILED TO COMMIT; Pending State Not Given\n");
                 manager->pending_action = STATE_ACTION_NONE;
             }
             break;
@@ -128,10 +146,6 @@ void commit_pending_action(GameStateManager *manager, int state_action, GameStat
             break;
     }
 
-/*
-    if(manager->pending_action != STATE_ACTION_NONE)
-        SDL_Log("- Pending: %s\n", action);
-*/
 }
 
 void update_states(GameContext *cxt){
@@ -156,8 +170,8 @@ void render_states(GameContext *cxt){
     while(state_node != NULL){
 
         if(state_node->state && state_node->state->state_render){
-            render_states_current_button(cxt);
             state_node->state->state_render(cxt);
+            render_state_buttons(cxt);
         }
 
         state_node = state_node->next;
