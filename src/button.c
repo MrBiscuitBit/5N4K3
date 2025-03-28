@@ -17,17 +17,8 @@ bool check_button_pointer_collision(GameContext *cxt, Button *current_button){
 
     if(!cxt || !cxt->game_state_manager || !cxt->game_state_manager->state_tail) return 0;
 
-    vec2 mouse = {cxt->app.mouse_x, cxt->app.mouse_y};
-
-    float button_left = current_button->pos.x - (current_button->size.x / 2);
-    float button_right = current_button->pos.x + (current_button->size.x / 2);
-    float button_top = current_button->pos.y - (current_button->size.y / 2);
-    float button_bottom = current_button->pos.y + (current_button->size.y / 2);
-
-    bool collision_x = mouse.x > button_left && mouse.x < button_right;
-    bool collision_y = mouse.y > button_top && mouse.y < button_bottom;
-
-    return collision_x && collision_y;
+    vec2 mouse = {cxt->app.mouse_x, cxt->app.mouse_y};  
+    return point_rect_collision(mouse, current_button->pos, current_button->size); 
 }
 
 void check_states_current_button(GameContext *cxt){

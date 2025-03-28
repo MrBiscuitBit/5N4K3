@@ -14,6 +14,14 @@ void cap_frame_rate(Uint64 current_time){
     }
 }
 
+bool point_rect_collision(vec2 point, vec2 rect_pos, vec2 rect_size){
+
+    bool collision_x = point.x < rect_pos.x + (rect_size.x / 2) && point.x > rect_pos.x - (rect_size.x / 2);
+    bool collision_y = point.y < rect_pos.y + (rect_size.y / 2) && point.y > rect_pos.y - (rect_size.y / 2);
+
+    return collision_x && collision_y;
+}
+
 vec4 vec4_lerp(vec4 vec_start, vec4 vec_target, float lerp_speed){
 
     vec4 new_vec4;

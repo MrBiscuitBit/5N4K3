@@ -29,6 +29,18 @@ typedef struct PlayerData{
     Snake *snake_head, *snake_tail;
 }PlayerData;
 
+typedef struct SwitchButton{
+    vec2 pos, size;
+    vec4 current_color;
+    vec4 on_color, off_color;
+    bool is_on;
+}SwitchButton;
+
+typedef struct PauseMenuData{
+    int switch_count;
+    SwitchButton *board_size_switches;
+}PauseMenuData;
+
 typedef struct GamePlayData{
     int board[BOARD_HEIGHT][BOARD_WIDTH];
     PlayerData *player_data;

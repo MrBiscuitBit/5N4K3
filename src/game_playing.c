@@ -362,6 +362,7 @@ static void cleanup_state_game_playing_data(GameState *state){
     GamePlayData *game_play_data = state->state_data;
     cleanup_player_data(game_play_data);
 
+    safe_free((void **)&game_play_data);
 }
 
 static int init_player_data(GamePlayData *game_play_data){
